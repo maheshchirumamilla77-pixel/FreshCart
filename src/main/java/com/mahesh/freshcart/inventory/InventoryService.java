@@ -17,12 +17,21 @@ public class InventoryService {
         this.productRepository = productRepository;
     }
     public Inventory saveInventory(Inventory inventory) {
+
         if (!productRepository.existsById(inventory.getProductId())) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Product not found"
             );
         }
+
+        if (inventoryRepository.existsByProductId(inventory.getProductId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Inventory already exists for this product"
+            );
+        }
+
         return inventoryRepository.save(inventory);
     }
     public List<Inventory> getAllInventory() {
@@ -58,5 +67,20 @@ public class InventoryService {
         }
         inventoryRepository.deleteById(id);
     }
-    
+    public boolean isLowStock(Long id) {
+
+        Inventory inventory = getInventoryById(id);
+
+        return inventory.getStockQuantity()
+                <= inventory.getReorderLevel();
+    }
+    public List<Inventory> getLowStockInventory() {
+
+        return inventoryRepository.findAll()
+                .stream()
+                .filter(inventory ->
+                        inventory.getStockQuantity()
+                                <= inventory.getReorderLevel())
+                .toList();
+    }
 }
