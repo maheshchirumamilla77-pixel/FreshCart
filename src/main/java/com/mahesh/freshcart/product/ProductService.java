@@ -1,6 +1,5 @@
 package com.mahesh.freshcart.product;
 
-import com.mahesh.freshcart.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;

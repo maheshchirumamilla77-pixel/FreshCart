@@ -2,7 +2,7 @@ package com.mahesh.freshcart.inventory;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import com.mahesh.freshcart.ProductRepository;
+import com.mahesh.freshcart.product.ProductRepository;
 import java.util.List;
 @Service
 public class InventoryService {

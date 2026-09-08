@@ -1,7 +1,6 @@
-package com.mahesh.freshcart;
+package com.mahesh.freshcart.product;
 
 
-import com.mahesh.freshcart.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
