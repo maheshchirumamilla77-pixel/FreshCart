@@ -6,10 +6,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 
-import jakarta.validation.constraints.Positive;
+
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,16 +28,17 @@ public class Order {
     @NotBlank(message = "Customer name is required")
     private String customerName;
 
-    @NotNull(message = "Total amount is required")
-    @Positive(message = "Total amount must be greater than 0")
+
     private BigDecimal totalAmount;
 
-    @NotBlank(message = "Order status is required")
+
     private String status;
 
     private LocalDateTime orderDate;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @NotEmpty(message = "Order must contain at least one item")
+    @Valid
     private List<OrderItem> items;
 
 
