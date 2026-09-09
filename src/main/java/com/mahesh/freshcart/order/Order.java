@@ -8,6 +8,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 
 import jakarta.validation.constraints.NotBlank;
@@ -31,8 +33,8 @@ public class Order {
 
     private BigDecimal totalAmount;
 
-
-    private String status;
+@Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     private LocalDateTime orderDate;
 
@@ -65,12 +67,11 @@ public class Order {
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
-
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 

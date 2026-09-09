@@ -33,7 +33,7 @@ public class OrderService {
 
         order.setOrderDate(LocalDateTime.now());
 
-    order.setStatus("CREATED");
+    order.setStatus(OrderStatus.CREATED);
 
         BigDecimal totalAmount = BigDecimal.ZERO;
 
@@ -90,16 +90,46 @@ public class OrderService {
                         "Order not found"
                 ));
     }
+    @Transactional
     public Order updateOrder(Long id, Order updatedOrder) {
+
         Order existingOrder = getOrderById(id);
 
+        if (existingOrder.getStatus() == OrderStatus.CANCELLED
+                && updatedOrder.getStatus() != OrderStatus.CANCELLED) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Cancelled order cannot be updated"
+            );
+        }
+
+        if (updatedOrder.getStatus() == OrderStatus.CANCELLED
+                && existingOrder.getStatus() != OrderStatus.CANCELLED) {
+
+            for (OrderItem item : existingOrder.getItems()) {
+
+                Inventory inventory = inventoryRepository
+                        .findByProductId(item.getProductId())
+                        .orElseThrow(() -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Inventory not found"
+                        ));
+
+                inventory.setStockQuantity(
+                        inventory.getStockQuantity() + item.getQuantity()
+                );
+
+                inventoryRepository.save(inventory);
+            }
+        }
+
         existingOrder.setCustomerName(updatedOrder.getCustomerName());
-        existingOrder.setTotalAmount(updatedOrder.getTotalAmount());
         existingOrder.setStatus(updatedOrder.getStatus());
 
         return orderRepository.save(existingOrder);
-
     }
+
     public void deleteOrder(Long id) {
         if (!orderRepository.existsById(id)) {
             throw new ResponseStatusException(
