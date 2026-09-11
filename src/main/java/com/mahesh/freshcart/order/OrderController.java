@@ -33,12 +33,15 @@ public class OrderController {
     public Order getOrderById(@PathVariable Long id) {
         return orderService.getOrderById(id);
     }
-    @PutMapping("/{id}")
-    public Order updateOrder(
+    @PutMapping("/{id}/status")
+    public Order updateOrderStatus(
             @PathVariable Long id,
-            @Valid @RequestBody Order updatedOrder) {
+            @Valid @RequestBody OrderStatusUpdateRequest request) {
 
-        return orderService.updateOrder(id, updatedOrder);
+        return orderService.updateOrderStatus(
+                id,
+                request.getStatus()
+        );
     }
     @DeleteMapping("/{id}")
     public void deleteOrder(@PathVariable Long id) {
